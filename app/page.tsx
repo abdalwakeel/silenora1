@@ -34,7 +34,7 @@ const featuredIds = [
 ];
 
 // دالة بتدور على المنتج وقسمه جوه product.json بالـ id
-function getProductById(id) {
+function getProductById(id: string) {
   for (const sectionKey in productsData) {
     const section = productsData[sectionKey];
     const product = section.items.find((item) => item.id === id);
