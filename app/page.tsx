@@ -33,23 +33,35 @@ const featuredIds = [
   "egyptian-magic-original",
 ];
 
-// دالة بتدور على المنتج وقسمه جوه product.json بالـ id
-function getProductById(id: string) {
-  for (const sectionKey in productsData) {
-    const section = productsData[sectionKey];
-    const product = section.items.find((item) => item.id === id);
+type FeaturedProduct = {
+  id: string;
+  title: string;
+  category: string;
+  price: number;
+  rating: number;
+  imageSrc: string;
+  description: string;
+};
+
+function getProductById(id: string): FeaturedProduct | null {
+  const sections = Object.values(productsData) as any[];
+
+  for (const section of sections) {
+    const product = section.items.find((item: any) => item.id === id);
+
     if (product) {
       return {
         id: product.id,
         title: product.name,
         category: section.section_title,
-        price: product.price ? product.price : (section.pricing?.single || 0),
+        price: product.price ?? section.pricing?.single ?? 0,
         rating: 5,
         imageSrc: product.image,
         description: product.sub_title,
       };
     }
   }
+
   return null;
 }
 
@@ -76,9 +88,9 @@ export default function Home() {
   ];
 
   // المنتجات دلوقتي جايه من product.json مش array محلي
-  const products = featuredIds
+  const products: FeaturedProduct[] = featuredIds
     .map((id) => getProductById(id))
-    .filter(Boolean);
+    .filter((p): p is FeaturedProduct => p !== null);
 
   return (
     <>
